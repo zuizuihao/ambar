@@ -28,7 +28,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install git+git://github.com/kivy/pyjnius.git
+RUN pip install git+https://github.com/kivy/pyjnius.git
 
 RUN mv jars/* /usr/lib/jvm/default-java/jre/lib/ext/
 

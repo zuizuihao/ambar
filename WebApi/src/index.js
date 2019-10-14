@@ -20,9 +20,16 @@ app.server = http.createServer(app)
 
 app.use(slao.init({ appName: 'ambar-webapi' }))
 
+var whitelist = ['http://localhost:3000', 'http://localhost:8085']
 app.use(cors({
 	credentials: true,
-	origin: true
+	origin: function (origin, callback) {
+		if (whitelist.indexOf(origin) !== -1 || !origin || origin == 'undefined' || origin == undefined) {
+			callback(null, true)
+		} else {
+			callback(new Error(`${origin} Not allowed by CORS`))
+		}
+	}
 }))
 
 app.use(bodyParser.json({

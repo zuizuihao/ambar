@@ -372,3 +372,7 @@ __pycache__/
 doc/
 
 */yarn.lock
+ambar_data/
+WebApi/package-lock.json
+ServiceApi/package-lock.json
+FrontEnd/package-lock.json
