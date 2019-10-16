@@ -10,3 +10,7 @@ http.cors.allow-origin: "*"
 node.ingest: false
 action.auto_create_index: false
 bootstrap.memory_lock: true
+
+cluster.routing.allocation.disk.threshold_enabled: true 
+cluster.routing.allocation.disk.watermark.low: 500mb 
+cluster.routing.allocation.disk.watermark.high: 300mb

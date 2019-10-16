@@ -13,7 +13,7 @@ services:
     environment:
       - cacheSizeGB=2
     volumes:
-      - ./ambar_data/db:/data/db
+      - esdata:/data/db
     expose:
       - "27017"
     ports:
@@ -32,7 +32,7 @@ services:
       - "9200:9200"   
     environment:
       - cluster.name=ambar-es
-      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -42,8 +42,9 @@ services:
         hard: 65536
     cap_add:
       - IPC_LOCK
-    volumes:
-      - ./ambar_data/es:/usr/share/elasticsearch/data
+    # volumes:
+    #   - esdata:/usr/share/elasticsearch/data
+    user: elasticsearch
 
   rabbit:
     restart: always
@@ -59,7 +60,7 @@ services:
     ports:
       - "5672:5672"  
     volumes:
-      - ./ambar_data/rabbit:/var/lib/rabbitmq
+      - esdata:/var/lib/rabbitmq
 
   redis:
     restart: always
@@ -100,8 +101,8 @@ services:
       - elasticSearchUrl=http://host.docker.internal:9200
       - redisHost=redis
       - redisPort=6379
-      - rabbitHost=amqp://host.docker.internal:5672
-      - langAnalyzer=ambar_cn  
+      - rabbitHost=amqp://host.docker.internal
+      - langAnalyzer=ambar_cn
       - SLAO_HOSTNAME=ambar 
       - SLAO_API_KEY=
 
@@ -126,7 +127,7 @@ services:
       - redisHost=redis
       - redisPort=6379
       - serviceApiUrl=host.docker.internal:8081
-      - rabbitHost=amqp://host.docker.internal:5672  
+      - rabbitHost=amqp://host.docker.internal  
       - SLAO_HOSTNAME=ambar
       - SLAO_API_KEY=  
 
@@ -160,7 +161,7 @@ services:
     environment:                
       - id=0
       - api_url=http://host.docker.internal:8081
-      - rabbit_host=amqp://host.docker.internal:5672
+      - rabbit_host=amqp://host.docker.internal
       - web_api_url=http://host.docker.internal:8080
 
   webcalc_crawler:
@@ -183,6 +184,10 @@ services:
       - mongoDbUrl=mongodb://host.docker.internal:27017/ambar_data
       - elasticSearchUrl=http://host.docker.internal:9200
       - redisHost=host.docker.internal:6379
-      - rabbitHost=amqp://host.docker.internal:5672
+      - rabbitHost=amqp://host.docker.internal
     volumes:
-      - ./ambar_data/raw:/usr/data
+      - esdata:/crawler/usr/data
+
+volumes:
+  esdata:
+    driver: local
